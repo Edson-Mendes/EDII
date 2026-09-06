@@ -16,7 +16,7 @@ void somaUm(int &x)
  *    somaUm recebe uma referência para i, dessa forma, a variável x dentro de somaUm() 
  *    está associada com o mesmo espaço de memória que i.
  *    Então x (também conhecido como i) é incrementado em 1.
- *    A execução acima ocorre até i checar ao valor 10.
+ *    A execução acima ocorre até i chegar ao valor 10.
  * printf apresenta na tela "valor de i : 10".
  * 
  * Segue um vídeo que me ajudou a entender sobre passagem por refêrencia:
