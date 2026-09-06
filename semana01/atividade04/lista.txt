@@ -1,0 +1,10 @@
+Ana             34
+Joao            28
+Rita            41
+Paulo           37
+Lia             22
+Otto            46
+Eva             31
+Hugo            53
+Bia             25
+Ivan            39
