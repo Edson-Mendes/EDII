@@ -1,0 +1,31 @@
+linha 5 -> Declara um array (caractere) do tipo char com 8 posições
+    caractere {x, x, x, x, x, x, x, x}
+linha 7 -> Declara um ponteiro (p) para o tipo char e atribui o endereço inicial de caractere (p <<< &caractere[0])
+    caractere {x, x, x, x, x, x, x, x}
+linha 9 -> Atribui 'e' para o endereço que p aponta (p = &caractere[0] então caractere[0] = 'e')
+    caractere {'e', x, x, x, x, x, x, x}
+linha 10 -> Atribui 'o' para a posição 5 do array caractere (caractere[5] <<< 'o')
+    caractere {'e', x, x, x, x, 'o', x, x}
+linha 11 -> Atribui ' ' para o 2º endereço após p (p = &caractere[0] então caractere[2] = ' ')
+    caractere {'e', x, ' ', x, x, 'o', x, x}
+linha 12 -> Atribui 'C' para o 7º endereço após p (p = &caractere[0] então caractere[7] = 'C')
+    caractere {'e', x, ' ', x, x, 'o', x, 'C'}
+linha 13 -> Incrementa o endereço de p em 1 posição (p <<< &caractere[1])
+    caractere {'e', x, ' ', x, x, 'o', x, 'C'}
+linha 14 -> Atribui 'u' para o endereço de p (p = &caractere[1] então caractere[1] = 'u')
+    caractere {'e', 'u', ' ', x, x, 'o', x, 'C'}
+linha 15 -> Decrementa o endereço de p em 1 posição (p <<< &caractere[0])
+    caractere {'e', 'u', ' ', x, x, 'o', x, 'C'}
+linha 16 -> Atribui 'm' para o 4º endereço após p (p = &caractere[0] então caractere[4] = 'm')
+    caractere {'e', 'u', ' ', x, 'm, 'o', x, 'C'}
+linha 17 -> Atribui o endereço de caractere[3] para p (p <<< &caractere[3])
+    caractere {'e', 'u', ' ', x, 'm, 'o', x, 'C'}
+linha 18 -> Atribui 'a' para o endereço de p (p = &caractere[3] então caractere[3] <<< 'a')
+    caractere {'e', 'u', ' ', 'a', 'm, 'o', x, 'C'}
+linha 19 -> Atribui ' ' para o 3º endereço após p (p = &caractere[3] então caractere[6] = ' ')
+    caractere {'e', 'u', ' ', 'a', 'm, 'o', ' ', 'C'}
+linha 20 -> Atribui o endereço inicial de caractere para p (p <<< &caractere[0])
+    caractere {'e', 'u', ' ', 'a', 'm, 'o', ' ', 'C'}
+linhas 22, 23, 24 -> Laço de repetição de i = 0 até 7 
+  que imprimi o elemento que está no endereço *(p + i) (p = &caractere[0] então *(p + i) = caractere[i])
+  Saída no console 'eu amo C'.

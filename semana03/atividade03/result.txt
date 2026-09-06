@@ -1,0 +1,36 @@
+linha 7 -> Atribui o endereço inicial de vetor para p (p <<< &vetor[0])
+    vetor {x, x, x, x, x, x, x, x, x, x} 
+linha 8 -> Atribui o valor 100 para o endereço que p aponta (p = &vetor[0] então vetor[0] <<< 100)
+    vetor {100, x, x, x, x, x, x, x, x, x}
+linha 9 -> Atribui o valor 120 para o endereço que p+1 aponta (p = &vetor[0] então vetor[1] <<< 120)
+    vetor {100, 120, x, x, x, x, x, x, x, x}
+linha 10 -> Atribui o valor 230 para o 2º endereço após p (p = &vetor[0] então vetor[2] <<< 230)
+    vetor {100, 120, 230, x, x, x, x, x, x, x}
+linha 11 -> Atribui o endereço de vetor[3] para p (p <<< &vetor[3])
+    vetor {100, 120, 230, x, x, x, x, x, x, x}
+linha 12 -> Atribui o valor 410 para o endereço que p aponta no momento (p = &vetor[3] então vetor[3] <<< 410)
+    vetor {100, 120, 230, 410, x, x, x, x, x, x}
+linha 13 -> Atribui o valor 510 para o 1º endereço após p (p = &vetor[3] então vetor[4] <<< 510)
+    vetor {100, 120, 230, 410, 510, x, x, x, x, x}
+linha 14 -> Atribui o próximo endereço de p para o próprio p (p = &vetor[3] então p <<< &vetor[4])
+    vetor {100, 120, 230, 410, 510, x, x, x, x, x}
+linha 15 -> Atribui o valor 160 para o endereço de p (p = &vetor[4] então vetor[4] <<< 160)
+    vetor {100, 120, 230, 410, 160, x, x, x, x, x}
+linha 16 -> Decrementa o endereço de p em uma posição (p = &vetor[4] então p <<< &vetor[3])
+    vetor {100, 120, 230, 410, 160, x, x, x, x, x}
+linha 17 -> Atribui o valor 66 para o 2º endereço após p (p = &vetor[3] então vetor[5] <<< 66)
+    vetor {100, 120, 230, 410, 160, 66, x, x, x, x}
+linha 18 -> Atribui o valor 170 para o 3º endereço após p (p = &vetor[3] então vetor[6] <<< 170)
+    vetor {100, 120, 230, 410, 160, 66, 170, x, x, x}
+linha 19 -> Atribui o endereço inicial de vetor para p (p <<< &vetor[0])
+    vetor {100, 120, 230, 410, 160, 66, 170, x, x, x}
+linha 20 -> Atribui o valor 880 para o 7º endereço após p (p = &vetor[0] então vetor[7] <<< 880)
+    vetor {100, 120, 230, 410, 160, 66, 170, 880, x, x}
+linha 21 -> Atribui o valor 990 para o 8º endereço após p (p = &vetor[0] então vetor[8] <<< 990)
+    vetor {100, 120, 230, 410, 160, 66, 170, 880, 990, x}
+linha 22 -> Incrementa o endereço de p em uma posição (p = &vetor[0] então p <<< &vetor[1])
+    vetor {100, 120, 230, 410, 160, 66, 170, 880, 990, x}
+linha 23 -> Atribui o valor 110 para o 8º endereço após p (p = &vetor[1] então vetor[9] <<< 110)
+    vetor {100, 120, 230, 410, 160, 66, 170, 880, 990, 110}
+
+vetor no final da execução: {100, 120, 230, 410, 160, 66, 170, 880, 990, 110}
