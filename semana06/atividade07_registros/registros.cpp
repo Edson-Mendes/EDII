@@ -27,15 +27,10 @@ int main(void)
   strcpy(palgumacoisa->descricao, "Batata");
   palgumacoisa->preco = 7.45;
 
-  // Outra forma de acessar os membros de algumcoisa.
-  strcpy((*palgumacoisa).descricao, "Banana");
-  (*palgumacoisa).preco = 5.67;
-
+  printf("-----\n");
   printf("algumacoisa.descricao: %s\n", algumacoisa.descricao);
   printf("palgumacoisa->descricao: %s\n", palgumacoisa->descricao);
-  printf("(*palgumacoisa).descricao: %s\n", (*palgumacoisa).descricao);
   printf("-----\n");
   printf("algumacoisa.preco: %f\n", algumacoisa.preco);
   printf("palgumacoisa->preco: %f\n", palgumacoisa->preco);
-  printf("(*palgumacoisa).preco: %f\n", (*palgumacoisa).preco);
 }
