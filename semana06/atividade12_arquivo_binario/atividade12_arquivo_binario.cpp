@@ -22,7 +22,7 @@ void imprimirOpcoes()
 
 /**
  * Retorna uma opção numérica digitada pelo usuário.
- * 
+ *
  * TODO: Programa quebra se digitar qualquer coisa diferente de um número.
  */
 int digitarOpcao()
@@ -43,7 +43,7 @@ int gerarID()
 }
 
 /**
- * Pega o nome e preço do produto digitados pelo usuário e 
+ * Pega o nome e preço do produto digitados pelo usuário e
  * atribui a um objeto Produto.
  */
 Produto gerarProduto()
@@ -58,7 +58,7 @@ Produto gerarProduto()
 }
 
 /**
- * Abri (cria se não existir) o arquivo "estoque.dat", 
+ * Abri (cria se não existir) o arquivo "estoque.dat",
  * e retorna um ponteiro para o arquivo aberto/criado.
  */
 FILE *abrirArquivo()
@@ -83,7 +83,8 @@ void cadastrarProduto(Produto *produto)
 }
 
 /**
- * Lista os produtos que estão salvos no arquivo "estoque.dat";
+ * Lista os produtos que estão salvos no arquivo "estoque.dat".
+ * Lê UM produto por vez do arquivo e imprimi na tela.
  */
 void listarProdutos()
 {
@@ -105,6 +106,47 @@ void listarProdutos()
   fclose(estoqueFile);
 }
 
+/**
+ * Retorna quantos produtos estão salvos no arquivo "estoque.dat".
+ */
+int quantidadeDeProdutos()
+{
+  FILE *estoqueFile = abrirArquivo();
+  int contador = 0;
+  Produto produto;
+  while (fread(&produto, sizeof(Produto), 1, estoqueFile) == 1)
+  {
+    contador++;
+  }
+  fclose(estoqueFile);
+  return contador;
+}
+
+/**
+ * Lista os produtos que estão salvos no arquivo "estoque.dat".
+ * Lê TODOS os produtos do arquivo e imprimi na tela.
+ */
+void listarProdutosV2()
+{
+  int quantidade = quantidadeDeProdutos();
+  FILE *estoqueFile = abrirArquivo();
+  Produto *produtos = (Produto *)malloc(sizeof(Produto) * quantidade);
+  fread(produtos, sizeof(Produto), quantidade, estoqueFile);
+  printf("-------------------------\n");
+  printf("PRODUTOS CADASTRADOS\n");
+  for (int i = 0; i < quantidade; i++)
+  {
+    printf("---------------\n");
+    printf("ID: %d\n", (produtos + i)->id);
+    printf("NOME: %s\n", (produtos + i)->nome);
+    printf("PREÇO: R$ %.2f\n", (produtos + i)->preco);
+  }
+  printf("-------------------------\n");
+  printf("TOTAL DE PRODUTOS CADASTRADOS: %d\n", quantidade);
+  free(produtos);
+  fclose(estoqueFile);
+}
+
 int main()
 {
   int opcao = 1;
@@ -123,6 +165,7 @@ int main()
     }
     case 2:
       listarProdutos();
+      // listarProdutosV2();
       break;
     case 3:
       printf("\nEncerrando programa...\n");
