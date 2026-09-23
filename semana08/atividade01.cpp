@@ -1,14 +1,15 @@
 #include <stdio.h>
 
-void contarParesImpares(int *vetor, int indice, int tamanho, int &pares, int &impares) {
+void contarParesImpares(int *vetor, int indice, int tamanho, int &pares, int &impares)
+{
   if (indice == tamanho)
     return;
   if (*(vetor + indice) % 2 == 0)
     pares++;
-  else 
+  else
     impares++;
 
-  contarParesImpares(vetor, indice+1, tamanho, pares, impares);
+  contarParesImpares(vetor, indice + 1, tamanho, pares, impares);
 }
 
 int contarPares(int *vetor, int indice, int tamanho)
@@ -20,7 +21,8 @@ int contarPares(int *vetor, int indice, int tamanho)
   return contarPares(vetor, indice + 1, tamanho);
 }
 
-int contarImpares(int *vetor, int indice, int tamanho) {
+int contarImpares(int *vetor, int indice, int tamanho)
+{
   return tamanho - contarPares(vetor, indice, tamanho);
 }
 
@@ -32,7 +34,7 @@ int main()
   printf("Quantidade de numeros PARES no vetor: %d\n", contarPares(vetor, 0, TAMANHO));
   printf("Quantidade de numeros IMPARES no vetor: %d\n", contarImpares(vetor, 0, TAMANHO));
 
-  printf("----- USANDO REFERENCIA -----\n");
+  printf("----- USANDO REFERÊNCIA -----\n");
   int pares = 0;
   int impares = 0;
   contarParesImpares(vetor, 0, TAMANHO, pares, impares);
