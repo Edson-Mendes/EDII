@@ -24,7 +24,7 @@ char **alocarVetorDePalavras(int quantidade, int tamanhoPalavra)
 
 void lerPalavras(char **vetor, int quantidade, int tamanhoPalavra)
 {
-  printf("Digite %d palavras de até %d caracteres:\n", quantidade, tamanhoPalavra - 1);
+  printf("Digite %d palavras de ate %d caracteres:\n", quantidade, tamanhoPalavra - 1);
   for (int i = 0; i < quantidade; i++) {
     scanf("%s", vetor[i]);
   }
@@ -73,6 +73,7 @@ int main()
   lerPalavras(vetor, QUANTIDADE, TAMANHO_PALAVRA);
 
   selectionSort(vetor, QUANTIDADE);
+
   printf("---- Depois de ordenar ----\n");
   imprimirVetor(vetor, QUANTIDADE);
   return 0;
