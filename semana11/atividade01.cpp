@@ -65,6 +65,33 @@ void selectionSort(char **vetor, int tamanho)
   }
 }
 
+int partition(char** vetor, int left, int right)
+{
+  int i, j;
+  i = left;
+  for (j = left + 1; j <= right; ++j)
+  {
+    if (strcmp(vetor[j], vetor[left]) < 0)
+    {
+      ++i;
+      swap(&vetor[i], &vetor[j]);
+    }
+  }
+  swap(&vetor[left], &vetor[i]);
+  return i;
+}
+
+void quickSort(char** vetor, int left, int right)
+{
+  int r;
+  if (right > left)
+  {
+    r = partition(vetor, left, right);
+    quickSort(vetor, left, r - 1);
+    quickSort(vetor, r + 1, right);
+  }
+}
+
 int main()
 {
   const int QUANTIDADE = 10;
@@ -72,7 +99,8 @@ int main()
   char **vetor = alocarVetorDePalavras(QUANTIDADE, TAMANHO_PALAVRA);
   lerPalavras(vetor, QUANTIDADE, TAMANHO_PALAVRA);
 
-  selectionSort(vetor, QUANTIDADE);
+  // selectionSort(vetor, QUANTIDADE);
+  quickSort(vetor, 0, QUANTIDADE - 1);
 
   printf("---- Depois de ordenar ----\n");
   imprimirVetor(vetor, QUANTIDADE);
