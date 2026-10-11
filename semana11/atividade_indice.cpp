@@ -16,6 +16,12 @@ struct CodigoIndice
   int indice;
 };
 
+struct NomeIndice
+{
+  char *nome;
+  int indice;
+};
+
 // --- Funcoes ---
 Pessoa criarPessoa(int codigo, char *nome, int idade);
 
@@ -23,13 +29,22 @@ Pessoa criarPessoa(int codigo, char *nome, int idade);
 void imprimirPessoas(Pessoa *pessoas, int tamanho);
 
 // Imprimi ordenado por codigo
-void imprimirCodigos(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho);
+void imprimirPorCodigo(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho);
 
-// Cria um indice do codigo de Pessoa.
-CodigoIndice *criarCodigoIndice(Pessoa *pessoas, int tamanho);
+// Imprimi ordenado por nome
+void imprimirPorNome(NomeIndice *codigoIndice, Pessoa *pessoas, int tamanho);
 
-// QuickSort
-void quickSort(CodigoIndice *indices, int left, int right);
+// Cria um indice do campo codigo de Pessoa.
+CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho);
+
+// Cria um indice do campo nome de Pessoa.
+NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho);
+
+// QuickSort por Codigo
+void quickSortByCodigo(CodigoIndice *indices, int left, int right);
+
+// QuickSort por Nome
+void quickSortByNome(NomeIndice *indices, int left, int right);
 
 int main()
 {
@@ -46,15 +61,21 @@ int main()
   pessoas[8] = criarPessoa(1001, "Edson Mendes", 32);
   pessoas[9] = criarPessoa(1006, "Beatriz Santos", 42);
 
+  printf("----- Ordenado por ordem de insercao -----\n");
   imprimirPessoas(pessoas, TAMANHO);
-  
-  CodigoIndice *codigos = criarCodigoIndice(pessoas, TAMANHO);
-  
-  printf("----- Ordenado por indice de codigo -----\n");
-  imprimirCodigos(codigos, pessoas, TAMANHO);
-  
-  printf("----- Ordenado por insercao -----\n");
+
+  CodigoIndice *codigos = criarIndiceDeCodigo(pessoas, TAMANHO);
+  NomeIndice *nomes = criarIndiceDeNome(pessoas, TAMANHO);
+
+  printf("\n----- Ordenado por indice de codigo -----\n");
+  imprimirPorCodigo(codigos, pessoas, TAMANHO);
+
+  printf("\n----- Ordenado por indice de nome -----\n");
+  imprimirPorNome(nomes, pessoas, TAMANHO);
+
+  printf("\n----- Ordenado por ordem de insercao -----\n");
   imprimirPessoas(pessoas, TAMANHO);
+
   return 0;
 }
 
@@ -69,7 +90,7 @@ Pessoa criarPessoa(int codigo, char *nome, int idade)
   return pessoa;
 }
 
-CodigoIndice *criarCodigoIndice(Pessoa *pessoas, int tamanho)
+CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho)
 {
   CodigoIndice *indices = (CodigoIndice *)malloc(tamanho * sizeof(CodigoIndice));
   for (int i = 0; i < tamanho; i++)
@@ -78,7 +99,21 @@ CodigoIndice *criarCodigoIndice(Pessoa *pessoas, int tamanho)
     indices[i].indice = i;
   }
 
-  quickSort(indices, 0, tamanho - 1);
+  quickSortByCodigo(indices, 0, tamanho - 1);
+
+  return indices;
+}
+
+NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho)
+{
+  NomeIndice *indices = (NomeIndice *)malloc(tamanho * sizeof(NomeIndice));
+  for (int i = 0; i < tamanho; i++)
+  {
+    indices[i].nome = pessoas[i].nome;
+    indices[i].indice = i;
+  }
+
+  quickSortByNome(indices, 0, tamanho - 1);
 
   return indices;
 }
@@ -91,7 +126,7 @@ void imprimirPessoas(Pessoa *pessoas, int tamanho)
   }
 }
 
-void imprimirCodigos(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho)
+void imprimirPorCodigo(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho)
 {
   for (int i = 0; i < tamanho; i++)
   {
@@ -100,15 +135,24 @@ void imprimirCodigos(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho)
   }
 }
 
-// QUICKSORT
-void swap(CodigoIndice *a, CodigoIndice *b)
+void imprimirPorNome(NomeIndice *nomeIndice, Pessoa *pessoas, int tamanho)
+{
+  for (int i = 0; i < tamanho; i++)
+  {
+    Pessoa *pessoa = &pessoas[nomeIndice[i].indice];
+    printf("%04d %-20s %02d\n", pessoa->codigo, pessoa->nome, pessoa->idade);
+  }
+}
+
+// QUICKSORT POR CODIGO
+void swapByCodigo(CodigoIndice *a, CodigoIndice *b)
 {
   CodigoIndice tmp = *a;
   *a = *b;
   *b = tmp;
 }
 
-int partition(CodigoIndice *indices, int left, int right)
+int partitionByCodigo(CodigoIndice *indices, int left, int right)
 {
   int i, j;
   i = left;
@@ -117,20 +161,55 @@ int partition(CodigoIndice *indices, int left, int right)
     if (indices[j].codigo < indices[left].codigo)
     {
       ++i;
-      swap(&indices[i], &indices[j]);
+      swapByCodigo(&indices[i], &indices[j]);
     }
   }
-  swap(&indices[left], &indices[i]);
+  swapByCodigo(&indices[left], &indices[i]);
   return i;
 }
 
-void quickSort(CodigoIndice *indices, int left, int right)
+void quickSortByCodigo(CodigoIndice *indices, int left, int right)
 {
   int r;
   if (right > left)
   {
-    r = partition(indices, left, right);
-    quickSort(indices, left, r - 1);
-    quickSort(indices, r + 1, right);
+    r = partitionByCodigo(indices, left, right);
+    quickSortByCodigo(indices, left, r - 1);
+    quickSortByCodigo(indices, r + 1, right);
+  }
+}
+
+// QUICKSORT POR NOME
+void swapByNome(NomeIndice *a, NomeIndice *b)
+{
+  NomeIndice tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+
+int partitionByNome(NomeIndice *indices, int left, int right)
+{
+  int i, j;
+  i = left;
+  for (j = left + 1; j <= right; ++j)
+  {
+    if (strcmp(indices[j].nome, indices[left].nome) < 0)
+    {
+      ++i;
+      swapByNome(&indices[i], &indices[j]);
+    }
+  }
+  swapByNome(&indices[left], &indices[i]);
+  return i;
+}
+
+void quickSortByNome(NomeIndice *indices, int left, int right)
+{
+  int r;
+  if (right > left)
+  {
+    r = partitionByNome(indices, left, right);
+    quickSortByNome(indices, left, r - 1);
+    quickSortByNome(indices, r + 1, right);
   }
 }
