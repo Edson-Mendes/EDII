@@ -22,15 +22,23 @@ struct NomeIndice
   int indice;
 };
 
-// ----- Funcoes de comparacao -----
+// --- Assinaturas de Funcoes ---
 int comparaCodigoIndice(void *primeiro, void *segundo);
 
-int comparaNomeCodigo(void *primeiro, void *segundo);
+int comparaNomeIndice(void *primeiro, void *segundo);
 
-// --- Funcoes ---
 Pessoa criarPessoa(int codigo, char *nome, int idade);
 
-// Imprimi na ordem que foram salvas.
+// Cria um vetor indice do campo codigo de Pessoa.
+CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho);
+
+// Cria um vetor indice do campo nome de Pessoa.
+NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho);
+
+// Imprimi pessoa
+void imprimirPessoa(Pessoa *pessoa);
+
+// Imprimi Pessoas na ordem que foram salvas.
 void imprimirPessoas(Pessoa *pessoas, int tamanho);
 
 // Imprimi ordenado por codigo
@@ -39,14 +47,11 @@ void imprimirPorCodigo(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho)
 // Imprimi ordenado por nome
 void imprimirPorNome(NomeIndice *codigoIndice, Pessoa *pessoas, int tamanho);
 
-// Cria um indice do campo codigo de Pessoa.
-CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho);
-
-// Cria um indice do campo nome de Pessoa.
-NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho);
-
 // QuickSort
 void quickSort(void *vetor, size_t tamanhoBytes, int left, int right, int (*compara)(void *, void *));
+
+// Busca por codigo.
+Pessoa *searchByCodigo(CodigoIndice *codigoIndice, int codigo, int start, int end, Pessoa *pessoas);
 
 int main()
 {
@@ -66,18 +71,25 @@ int main()
   printf("----- Ordenado por ordem de insercao -----\n");
   imprimirPessoas(pessoas, TAMANHO);
 
-  CodigoIndice *codigos = criarIndiceDeCodigo(pessoas, TAMANHO);
-  NomeIndice *nomes = criarIndiceDeNome(pessoas, TAMANHO);
+  CodigoIndice *codigoIndice = criarIndiceDeCodigo(pessoas, TAMANHO);
+  NomeIndice *nomeIndice = criarIndiceDeNome(pessoas, TAMANHO);
 
   printf("\n----- Ordenado por indice de codigo -----\n");
-  imprimirPorCodigo(codigos, pessoas, TAMANHO);
+  imprimirPorCodigo(codigoIndice, pessoas, TAMANHO);
 
   printf("\n----- Ordenado por indice de nome -----\n");
-  imprimirPorNome(nomes, pessoas, TAMANHO);
+  imprimirPorNome(nomeIndice, pessoas, TAMANHO);
 
-  printf("\n----- Ordenado por ordem de insercao -----\n");
-  imprimirPessoas(pessoas, TAMANHO);
-
+  // Aplicar busca por codigo.
+  int cod = 1006;
+  Pessoa *pessoa = searchByCodigo(codigoIndice, cod, 0, TAMANHO - 1, pessoas);
+  if (pessoa == NULL)
+    printf("\nCodigo %d nao encontrado!\n\n", cod);
+  else
+  {
+    printf("\nCodigo %d encontrado!\n", cod);
+    imprimirPessoa(pessoa);
+  }
   return 0;
 }
 
@@ -95,6 +107,11 @@ Pessoa criarPessoa(int codigo, char *nome, int idade)
 CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho)
 {
   CodigoIndice *indices = (CodigoIndice *)malloc(tamanho * sizeof(CodigoIndice));
+  if (indices == NULL)
+  {
+    printf("Não foi possivel alocar vetor de CodigoIndice!");
+    exit(1);
+  }
   for (int i = 0; i < tamanho; i++)
   {
     indices[i].codigo = pessoas[i].codigo;
@@ -109,44 +126,60 @@ CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho)
 NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho)
 {
   NomeIndice *indices = (NomeIndice *)malloc(tamanho * sizeof(NomeIndice));
+  if (indices == NULL)
+  {
+    printf("Não foi possivel alocar vetor de NomeIndice!");
+    exit(1);
+  }
   for (int i = 0; i < tamanho; i++)
   {
     indices[i].nome = pessoas[i].nome;
     indices[i].indice = i;
   }
 
-  quickSort(indices, sizeof(NomeIndice), 0, tamanho - 1, comparaNomeCodigo);
+  quickSort(indices, sizeof(NomeIndice), 0, tamanho - 1, comparaNomeIndice);
 
   return indices;
 }
 
+void imprimirLabels()
+{
+  printf("%-4s %-20s %s\n", "COD", "NOME", "IDADE");
+}
+
+void imprimirPessoa(Pessoa *pessoa)
+{
+  printf("%04d %-20s %02d\n", pessoa->codigo, pessoa->nome, pessoa->idade);
+}
+
 void imprimirPessoas(Pessoa *pessoas, int tamanho)
 {
+  imprimirLabels();
   for (int i = 0; i < tamanho; i++)
   {
-    printf("%04d %-20s %02d\n", pessoas[i].codigo, pessoas[i].nome, pessoas[i].idade);
+    imprimirPessoa(&pessoas[i]);
   }
 }
 
 void imprimirPorCodigo(CodigoIndice *codigoIndice, Pessoa *pessoas, int tamanho)
 {
+  imprimirLabels();
   for (int i = 0; i < tamanho; i++)
   {
-    Pessoa *pessoa = &pessoas[codigoIndice[i].indice];
-    printf("%04d %-20s %02d\n", pessoa->codigo, pessoa->nome, pessoa->idade);
+    imprimirPessoa(&pessoas[codigoIndice[i].indice]);
   }
 }
 
 void imprimirPorNome(NomeIndice *nomeIndice, Pessoa *pessoas, int tamanho)
 {
+  imprimirLabels();
   for (int i = 0; i < tamanho; i++)
   {
-    Pessoa *pessoa = &pessoas[nomeIndice[i].indice];
-    printf("%04d %-20s %02d\n", pessoa->codigo, pessoa->nome, pessoa->idade);
+    imprimirPessoa(&pessoas[nomeIndice[i].indice]);
   }
 }
 
-int comparaNomeCodigo(void *primeiro, void *segundo)
+int comparaNomeIndice(void *primeiro, void *segundo)
 {
   NomeIndice *nome1 = (NomeIndice *)primeiro;
   NomeIndice *nome2 = (NomeIndice *)segundo;
@@ -203,4 +236,23 @@ void quickSort(void *vetor, size_t tamanhoBytes, int left, int right, int (*comp
     quickSort(vetor, tamanhoBytes, left, r - 1, compara);
     quickSort(vetor, tamanhoBytes, r + 1, right, compara);
   }
+}
+
+// Busca Pessoa por codigo.
+Pessoa *searchByCodigo(CodigoIndice *codigoIndice, int codigoBuscado, int start, int end, Pessoa *pessoas)
+{
+  if (start > end)
+  {
+    return NULL;
+  }
+  int mid = (start + end) / 2;
+  if (codigoBuscado == codigoIndice[mid].codigo)
+  {
+    return &pessoas[codigoIndice[mid].indice];
+  }
+  if (codigoBuscado > codigoIndice[mid].codigo)
+  {
+    return searchByCodigo(codigoIndice, codigoBuscado, mid + 1, end, pessoas);
+  }
+  return searchByCodigo(codigoIndice, codigoBuscado, start, mid - 1, pessoas);
 }
