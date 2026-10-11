@@ -68,11 +68,11 @@ int main()
   pessoas[8] = criarPessoa(1001, "Edson Mendes", 32);
   pessoas[9] = criarPessoa(1006, "Beatriz Santos", 42);
 
-  printf("----- Ordenado por ordem de insercao -----\n");
-  imprimirPessoas(pessoas, TAMANHO);
-
   CodigoIndice *codigoIndice = criarIndiceDeCodigo(pessoas, TAMANHO);
   NomeIndice *nomeIndice = criarIndiceDeNome(pessoas, TAMANHO);
+
+  printf("----- Ordenado por ordem de insercao -----\n");
+  imprimirPessoas(pessoas, TAMANHO);
 
   printf("\n----- Ordenado por indice de codigo -----\n");
   imprimirPorCodigo(codigoIndice, pessoas, TAMANHO);
