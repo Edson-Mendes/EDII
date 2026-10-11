@@ -22,6 +22,11 @@ struct NomeIndice
   int indice;
 };
 
+// ----- Funcoes de comparacao -----
+int comparaCodigoIndice(void *primeiro, void *segundo);
+
+int comparaNomeCodigo(void *primeiro, void *segundo);
+
 // --- Funcoes ---
 Pessoa criarPessoa(int codigo, char *nome, int idade);
 
@@ -40,11 +45,8 @@ CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho);
 // Cria um indice do campo nome de Pessoa.
 NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho);
 
-// QuickSort por Codigo
-void quickSortByCodigo(CodigoIndice *indices, int left, int right);
-
-// QuickSort por Nome
-void quickSortByNome(NomeIndice *indices, int left, int right);
+// QuickSort
+void quickSort(void *vetor, size_t tamanhoBytes, int left, int right, int (*compara)(void *, void *));
 
 int main()
 {
@@ -99,7 +101,7 @@ CodigoIndice *criarIndiceDeCodigo(Pessoa *pessoas, int tamanho)
     indices[i].indice = i;
   }
 
-  quickSortByCodigo(indices, 0, tamanho - 1);
+  quickSort(indices, sizeof(CodigoIndice), 0, tamanho - 1, comparaCodigoIndice);
 
   return indices;
 }
@@ -113,7 +115,7 @@ NomeIndice *criarIndiceDeNome(Pessoa *pessoas, int tamanho)
     indices[i].indice = i;
   }
 
-  quickSortByNome(indices, 0, tamanho - 1);
+  quickSort(indices, sizeof(NomeIndice), 0, tamanho - 1, comparaNomeCodigo);
 
   return indices;
 }
@@ -144,72 +146,61 @@ void imprimirPorNome(NomeIndice *nomeIndice, Pessoa *pessoas, int tamanho)
   }
 }
 
-// QUICKSORT POR CODIGO
-void swapByCodigo(CodigoIndice *a, CodigoIndice *b)
+int comparaNomeCodigo(void *primeiro, void *segundo)
 {
-  CodigoIndice tmp = *a;
-  *a = *b;
-  *b = tmp;
+  NomeIndice *nome1 = (NomeIndice *)primeiro;
+  NomeIndice *nome2 = (NomeIndice *)segundo;
+  return strcmp(nome1->nome, nome2->nome);
 }
 
-int partitionByCodigo(CodigoIndice *indices, int left, int right)
+int comparaCodigoIndice(void *primeiro, void *segundo)
+{
+  CodigoIndice *cod1 = (CodigoIndice *)primeiro;
+  CodigoIndice *cod2 = (CodigoIndice *)segundo;
+  return cod1->codigo - cod2->codigo;
+}
+
+// QUICKSORT
+void swap(void *a, void *b, size_t tamanhoBytes)
+{
+  char *p1 = (char *)a;
+  char *p2 = (char *)b;
+
+  for (int i = 0; i < tamanhoBytes; i++)
+  {
+    char temporario = p1[i];
+    p1[i] = p2[i];
+    p2[i] = temporario;
+  }
+}
+
+int partition(void *vetor, size_t tamanhoBytes, int left, int right, int (*compara)(void *, void *))
 {
   int i, j;
   i = left;
+  char *elementoLeft = (char *)vetor + tamanhoBytes * left;
   for (j = left + 1; j <= right; ++j)
   {
-    if (indices[j].codigo < indices[left].codigo)
+    char *elementoJ = (char *)vetor + tamanhoBytes * j;
+    if (compara(elementoJ, elementoLeft) < 0)
     {
       ++i;
-      swapByCodigo(&indices[i], &indices[j]);
+      char *elementoI = (char *)vetor + tamanhoBytes * i;
+      swap(elementoI, elementoJ, tamanhoBytes);
     }
   }
-  swapByCodigo(&indices[left], &indices[i]);
+  char *elementoI = (char *)vetor + tamanhoBytes * i;
+  swap(elementoLeft, elementoI, tamanhoBytes);
   return i;
 }
 
-void quickSortByCodigo(CodigoIndice *indices, int left, int right)
+void quickSort(void *vetor, size_t tamanhoBytes, int left, int right, int (*compara)(void *, void *))
 {
   int r;
   if (right > left)
   {
-    r = partitionByCodigo(indices, left, right);
-    quickSortByCodigo(indices, left, r - 1);
-    quickSortByCodigo(indices, r + 1, right);
-  }
-}
-
-// QUICKSORT POR NOME
-void swapByNome(NomeIndice *a, NomeIndice *b)
-{
-  NomeIndice tmp = *a;
-  *a = *b;
-  *b = tmp;
-}
-
-int partitionByNome(NomeIndice *indices, int left, int right)
-{
-  int i, j;
-  i = left;
-  for (j = left + 1; j <= right; ++j)
-  {
-    if (strcmp(indices[j].nome, indices[left].nome) < 0)
-    {
-      ++i;
-      swapByNome(&indices[i], &indices[j]);
-    }
-  }
-  swapByNome(&indices[left], &indices[i]);
-  return i;
-}
-
-void quickSortByNome(NomeIndice *indices, int left, int right)
-{
-  int r;
-  if (right > left)
-  {
-    r = partitionByNome(indices, left, right);
-    quickSortByNome(indices, left, r - 1);
-    quickSortByNome(indices, r + 1, right);
+    r = partition(vetor, tamanhoBytes, left, right, compara);
+    quickSort(vetor, tamanhoBytes, left, r - 1, compara);
+    quickSort(vetor, tamanhoBytes, r + 1, right, compara);
   }
 }
